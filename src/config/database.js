@@ -9,10 +9,7 @@ if (!url) {
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(url, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    });
+    await mongoose.connect(url);
     console.log('MongoDB connected');
   } catch (err) {
     console.error('Failed to connect to MongoDB:', err);
