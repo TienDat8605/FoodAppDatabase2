@@ -1,6 +1,6 @@
 const User = require('../models/User'); // Adjust path as necessary
 
-const handleRegister = async (req, res) => {
+const handleRegister = async (req, res, next) => {
   //create a new user
   const { email, password } = req.body;
   if (!email || !password) {
@@ -16,7 +16,6 @@ const handleRegister = async (req, res) => {
     const newUser = await User.create({ email, password });
     //res.status(201).json({ message: 'User registered', userId: newUser._id });
     console.log(`User ${newUser.email} registered successfully`);
-    // attach userId to request for profile creation
     req.user = newUser; // Attach user to request
     next(); // create profile after registration
   } catch (err) {
