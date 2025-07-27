@@ -14,7 +14,7 @@ const handleRegister = async (req, res) => {
     }
     // Create new user (password will be hashed by pre-save hook)
     const newUser = await User.create({ email, password });
-    res.status(201).json({ message: 'User registered', userId: newUser._id });
+    //res.status(201).json({ message: 'User registered', userId: newUser._id });
     console.log(`User ${newUser.email} registered successfully`);
     // attach userId to request for profile creation
     req.user = newUser; // Attach user to request
