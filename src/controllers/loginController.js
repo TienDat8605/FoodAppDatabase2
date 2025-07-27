@@ -23,8 +23,10 @@ const handleLogin = async (req, res) => {
       { expiresIn: '1h' }
     );
     res.json({ message: 'Login successful', token });
+    console.log(`User ${user.email} logged in successfully`);
   } catch (err) {
     res.status(500).json({ error: 'Server error' });
+    console.error('Login error:', err); // Log the error for debugging
   }
 }
 
