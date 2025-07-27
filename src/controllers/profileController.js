@@ -1,10 +1,10 @@
 const Profile = require('../models/Profile');
 
 const handleCreateProfile = async (req, res) => {
-  const userId = req.user.userId; // Get userId from authenticated request
+  const userId = req.user._id; // Get userId from authenticated request
   const { name, address, phone, dob } = req.body;
   if ( !userId || !name || !address || !phone || !dob ) {
-    return res.status(400).json({ error: 'User ID, bio, and location are required' });
+    return res.status(400).json({ error: 'need userID, name, address, phone, dob u dumbass' });
   }
   try {
     // Check if profile already exists for the user
