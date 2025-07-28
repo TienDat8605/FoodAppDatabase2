@@ -15,7 +15,7 @@ const handleCreateProfile = async (req, res) => {
     // Create new profile
     const newProfile = await Profile.create({ userId, name, address, phone, dob });
     await newProfile.save(); // Save the profile to the database
-    res.status(201).json({ message: 'Profile created', profile: newProfile });
+    res.status(201).json({ message: 'Profile created', username: name });
     console.log(`Profile for user ${userId} created successfully`);
   } catch (err) {
     res.status(500).json({ error: 'Server error' });
