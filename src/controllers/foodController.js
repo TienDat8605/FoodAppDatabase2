@@ -40,7 +40,6 @@ const handleSearchByEmbedding = async (req, res) => {
     return res.status(400).json({ error: 'Embedding is required' });
   }
   try {
-    embedding = embedding.split(',').map(Number); // Convert string to array of numbers
     const foods = await Food.find({}, { _id: 1, name: 1, embedding: 1 });
     const results = foods
       .filter(food => Array.isArray(food.embedding) && food.embedding.length === embedding.length)
