@@ -3,13 +3,13 @@ const { cosineSimilarity } = require('../utils/similarityFunction');
 
 const handleGetAllFoods = async (req, res) => {
   try {
-    const foods = await Food.find({}, { name: 1, category: 1, price: 1, image: 1 }); // Only needed fields
+    const foods = await Food.find({}, { name: 1, description: 1, category: 1, subcategories: 1, price: 1}); // Only needed fields
     const foodsWithImageUrl = foods.map(food => ({
       _id: food._id,
       name: food.name,
       description: food.description,
-      subcategories: food.subcategories,
       category: food.category,
+      subcategories: food.subcategories,
       price: food.price
     }));
     res.json(foodsWithImageUrl);
