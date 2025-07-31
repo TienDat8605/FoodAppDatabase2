@@ -1,15 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const Food = require('../../models/Food');
+const authMiddleware = require('../../middlewares/authenticateMiddleware');
+const foodController = require('../../controllers/foodController');
 
 // GET /api/food - get all food items
-router.get('/', async (req, res) => {
-  try {
-    const foods = await Food.find();
-    res.json(foods);
-  } catch (err) {
-    res.status(500).json({ error: 'Server error' });
-  }
-});
-
+router.get('/', foodController.handleGetAllFoods);
+router.get('/:id/image', foodController.handleGetFoodImageByID);
+router.get('/searchByEmbedding', foodController.handleSearchByEmbedding);
 module.exports = router;
