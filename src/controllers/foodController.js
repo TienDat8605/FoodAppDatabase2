@@ -1,5 +1,11 @@
 const Food = require('../models/Food');
-const { cosineSimilarity } = require('../utils/similarityFunction'); 
+const similarity = require('../utils/similarityFunction'); 
+
+const similarityFunctions = {
+  cosine: similarity.cosineSimilarity,
+  l2: similarity.L2Distance,
+  hybrid: similarity.hybridSimilarity
+};
 
 const handleGetAllFoods = async (req, res) => {
   try {
@@ -35,10 +41,12 @@ const handleGetFoodImageByID = async (req, res) => {
 }
 
 const handleSearchByEmbedding = async (req, res) => {
-  const { embedding } = req.body; // Assuming embedding is passed as a query parameter
+  const { embedding, similarityModel } = req.body; // Assuming embedding is passed as a query parameter
   if (!embedding) {
     return res.status(400).json({ error: 'Embedding is required' });
   }
+  // Look up the function using the model name, or default to hybridSimilarity
+  const model = similarityFunctions[similarityModel] || similarity.hybridSimilarity;
   try {
     const foods = await Food.find({}, { _id: 1, name: 1, embedding: 1 });
     const results = foods
@@ -46,7 +54,7 @@ const handleSearchByEmbedding = async (req, res) => {
       .map(food => ({
         foodID: food._id,
         foodName: food.name,
-        similarity: cosineSimilarity(embedding, food.embedding)
+        similarity: model(embedding, food.embedding)
       }))
         .sort((a, b) => b.similarity - a.similarity); // Sort by similarity descending
     res.json(results);
