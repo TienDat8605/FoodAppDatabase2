@@ -14,6 +14,8 @@ app.use(cors());
 app.use('/api/auth/register', require('./routes/api/auth/register'));
 app.use('/api/auth/login', require('./routes/api/auth/login'));
 app.use('/api/profile', require('./routes/api/profile'));
+app.use('/api/food', require('./routes/food'));
+
 
 mongoose.connection.once('open', () => {
   console.log('MongoDB connection established');

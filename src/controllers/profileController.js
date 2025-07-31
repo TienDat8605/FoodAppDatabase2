@@ -77,7 +77,7 @@ const handleAddProfilePicture = async (req, res) => {
         profilePicture: {
           data: req.file.buffer,
           contentType: req.file.mimetype,
-        }
+        } 
       },
       { new: true } // Return the updated profile
     );
