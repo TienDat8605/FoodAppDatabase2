@@ -7,5 +7,5 @@ const foodController = require('../../controllers/foodController');
 // GET /api/food - get all food items
 router.get('/', foodController.handleGetAllFoods);
 router.get('/:id/image', foodController.handleGetFoodImageByID);
-router.get('/searchByEmbedding', foodController.handleSearchByEmbedding);
+router.post('/searchByEmbedding', foodController.handleSearchByEmbedding);
 module.exports = router;
