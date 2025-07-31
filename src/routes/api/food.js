@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Food = require('../models/Food');
+const Food = require('../../models/Food');
 
 // GET /api/food - get all food items
 router.get('/', async (req, res) => {
