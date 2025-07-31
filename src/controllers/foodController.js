@@ -35,7 +35,7 @@ const handleGetFoodImageByID = async (req, res) => {
 }
 
 const handleSearchByEmbedding = async (req, res) => {
-  const { embedding } = req.query; // Assuming embedding is passed as a query parameter
+  const { embedding } = req.body; // Assuming embedding is passed as a query parameter
   if (!embedding) {
     return res.status(400).json({ error: 'Embedding is required' });
   }
