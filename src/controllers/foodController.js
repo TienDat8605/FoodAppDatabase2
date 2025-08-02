@@ -64,8 +64,57 @@ const handleSearchByEmbedding = async (req, res) => {
   }
 }
 
+const handleSearchByCategory = async (req, res) => {
+  const { category } = req.query; // Assuming category is passed as a query parameter
+  if (!category) {
+    return res.status(400).json({ error: 'Category is required' });
+  }
+  try {
+    const foods = await Food.find({ category }, { _id: 1, name: 1, description: 1, price: 1, image: 1 });
+    if (foods.length === 0) {
+      return res.status(404).json({ error: 'No food items found for this category' });
+    }
+    // only return food id, name. Front end will handle description, price, and image
+    const result = foods.map(food => ({
+      _id: food._id,
+      name: food.name,
+      category: food.category,
+    }));
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: 'Server error' });
+    console.error('Error fetching food items by category:', err);
+  }
+}
+
+const handleSearchBySubcategory = async (req, res) => {
+  const { subcategory } = req.query; // Assuming subcategory is passed as a query parameter
+  if (!subcategory) {
+    return res.status(400).json({ error: 'Subcategory is required' });
+  }
+  try {
+    const foods = await Food.find({ subcategories: subcategory }, { _id: 1, name: 1, description: 1, price: 1, image: 1 });
+    if (foods.length === 0) {
+      return res.status(404).json({ error: 'No food items found for this subcategory' });
+    }
+    // only return food id, name. Front end will handle description, price, and image
+    const result = foods.map(food => ({
+      _id: food._id,
+      name: food.name,
+      category: food.category,
+      subcategories: food.subcategories,
+    }));
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: 'Server error' });
+    console.error('Error fetching food items by subcategory:', err);
+  }
+}
+
 module.exports = {
   handleGetAllFoods,
   handleGetFoodImageByID,
-  handleSearchByEmbedding
+  handleSearchByEmbedding,
+  handleSearchByCategory,
+  handleSearchBySubcategory
 };

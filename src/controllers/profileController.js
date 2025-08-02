@@ -64,6 +64,24 @@ const handleUpdateProfile = async (req, res) => {
   }
 }
 
+const handleDeleteProfile = async (req, res) => {
+  const userId = req.user.userId; // Get userId from authenticated request
+  if (!userId) {
+    return res.status(400).json({ error: 'User ID is required' });
+  }
+  try {
+    const profile = await Profile.findOneAndDelete({ userId });
+    if (!profile) {
+      return res.status(404).json({ error: 'Profile not found' });
+    }
+    res.json({ message: 'Profile deleted' });
+    console.log(`Profile for user ${userId} deleted successfully`);
+  } catch (err) {
+    res.status(500).json({ error: 'Server error' });
+    console.error('Error deleting profile:', err);
+  }
+}
+
 const handleAddProfilePicture = async (req, res) => {
   const userId = req.user.userId; // Get userId from authenticated request
 
@@ -92,4 +110,5 @@ const handleAddProfilePicture = async (req, res) => {
   }
 }
 
-module.exports = { handleCreateProfile, handleGetProfile, handleUpdateProfile, handleAddProfilePicture };
+module.exports = { handleCreateProfile, handleGetProfile, handleUpdateProfile, handleDeleteProfile, 
+  handleAddProfilePicture };
