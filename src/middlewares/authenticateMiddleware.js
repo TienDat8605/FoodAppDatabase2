@@ -13,6 +13,7 @@ function authenticateToken(req, res, next) {
       return res.sendStatus(403); // Invalid token
     }
     req.user = user; // attach decoded token payload (e.g. userId)
+    console.log('Authenticated user:', req.user);
     next();
   });
 }

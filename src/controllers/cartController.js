@@ -139,7 +139,7 @@ const handleClearSelectedCart = async (req, res) => {
     }
 }
 
-const handleCheckoutCart = async (req, res) => {
+const handleCheckoutCart = async (req, res, next) => {
     //return a lists of items to be ordered (selected items)
     const userId = req.user.UserId; // Get userId from authenticated request
     if (!userId) {
@@ -152,8 +152,8 @@ const handleCheckoutCart = async (req, res) => {
             return res.status(404).json({ error: 'No selected items found in cart' });
         }
         // Here you would typically create an order from these items (let orderController handle that)
-        // For now, just return the selected items
-        res.json(cartItems);
+        req.cartItems = cartItems; // Attach cart items to request for further processing
+        next(); // Proceed to the next middleware or controller
         console.log(`Checkout successful for user ${userId}`);
     } catch (err) {
         res.status(500).json({ error: 'Server error' });

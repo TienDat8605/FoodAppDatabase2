@@ -9,17 +9,11 @@ const orderSchema = new Schema({
   },
   // Array of cart items
   cartItems: [{
-    foodId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Food',
-      required: true,
-    },
-    quantity: {
-      type: Number,
-      required: true,
-      min: 1, // Ensure quantity is at least 1
-    }
-}],
+    name: { type: String, required: true },
+    toppings: [{ name: String, price: Number }],
+    quantity: { type: Number, required: true, min: 1 },
+    price: { type: Number, required: true }
+  }],
   totalPrice: {
     type: Number,
     required: true,
@@ -33,7 +27,7 @@ const orderSchema = new Schema({
   deliveryAddress: {
     type: String,
     required: true,
-},
+  },
 }, {
   timestamps: true, // Automatically manage createdAt and updatedAt fields
 });

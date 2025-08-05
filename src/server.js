@@ -15,7 +15,8 @@ app.use('/api/auth/register', require('./routes/api/auth/register'));
 app.use('/api/auth/login', require('./routes/api/auth/login'));
 app.use('/api/profile', require('./routes/api/profile'));
 app.use('/api/food', require('./routes/api/food'));
-
+app.use('/api/cart', require('./routes/api/cart'));
+app.use('/api/order', require('./routes/api/order'));
 
 mongoose.connection.once('open', () => {
   console.log('MongoDB connection established');
