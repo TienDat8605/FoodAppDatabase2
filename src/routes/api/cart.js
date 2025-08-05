@@ -4,19 +4,18 @@ const authMiddleware = require('../../middlewares/authenticateMiddleware');
 const cartController = require('../../controllers/cartController');
 
 
-// Not using authMiddleware for development purposes, but should be protected in production
 // GET items in cart
-router.get('/', cartController.handleGetCartItems);
+router.get('/', authMiddleware, cartController.handleGetCartItems);
 // Add item to cart
-router.post('/', cartController.handleAddItemToCart);
+router.post('/', authMiddleware, cartController.handleAddItemToCart);
 // Update item in cart
-router.put('/:itemId', cartController.handleUpdateItemInCart);
+router.put('/:cartItemId', authMiddleware, cartController.handleUpdateItemInCart); //cartItemID is the cart item ID
 // Remove item from cart
-router.delete('/:itemId', cartController.handleRemoveItemFromCart);
+router.delete('/:cartItemId', authMiddleware, cartController.handleRemoveItemFromCart);
 // Clear cart
-router.delete('/', cartController.handleClearCart);
+router.delete('/', authMiddleware, cartController.handleClearSelectedCart);
 // Checkout cart: if success, move to order creation screen else don't do anything
-router.post('/checkout', cartController.handleCheckoutCart);
+router.post('/checkout', authMiddleware, cartController.handleCheckoutCart);
 
 // flow:
 // 1. User adds items to cart

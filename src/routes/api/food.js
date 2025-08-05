@@ -8,4 +8,10 @@ const foodController = require('../../controllers/foodController');
 router.get('/', foodController.handleGetAllFoods);
 router.get('/:id/image', foodController.handleGetFoodImageByID);
 router.post('/searchByEmbedding', foodController.handleSearchByEmbedding);
+// Search food items by category
+router.post('/searchByCategory', foodController.handleSearchByCategory);
+// Search food items by subcategory
+router.post('/searchBySubcategory', foodController.handleSearchBySubcategory);
+// search food items by category, subcategory, and rating
+router.post('/search', foodController.handleSearch);
 module.exports = router;

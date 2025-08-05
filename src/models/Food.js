@@ -7,12 +7,25 @@ const foodSchema = new Schema({
   category: String,
   subcategories: [String],
   price: Number,
-  image: {
+  foodPicture: {
     data: Buffer,
     contentType: String,
-    filename: String
   },
-  embedding: [Number]
+  embedding: [Number],
+  //rating
+  rating: {
+    type: Number,
+    default: 0, // Default rating is 0
+  },
+  //ratingCount
+  ratingCount: {
+    type: Number,
+    default: 0, // Default rating count is 0
+  },
+  toppings: [{
+    name: String,
+    price: Number,
+  }]
 });
 
 module.exports = mongoose.model('Food', foodSchema);

@@ -10,7 +10,7 @@ const profileSchema = new Schema({
   profilePicture: {
     data: Buffer,
     contentType: String,
-  },
+  }
 });
 
 module.exports = mongoose.model('Profile', profileSchema);
