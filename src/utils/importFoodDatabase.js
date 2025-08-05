@@ -5,25 +5,32 @@ const Food = require('../models/Food');
 const connectDB = require('../config/database');
 
 const foodJsonPath = path.join(__dirname, '../../foodDatabase/food_with_embeddings.json');
-const imagesDir = path.join(__dirname, '../../foodDatabase/images');
+const foodPicturesDir = path.join(__dirname, '../../foodDatabase/images');
 
 async function importFood() {
   await connectDB();
   const foodData = JSON.parse(fs.readFileSync(foodJsonPath, 'utf8'));
   for (const item of foodData) {
-    const imagePath = item.image_urls && item.image_urls[0]
-      ? path.join(imagesDir, path.basename(item.image_urls[0]))
+    const foodPicturePath = item.image_urls && item.image_urls[0]
+      ? path.join(foodPicturesDir, path.basename(item.image_urls[0]))
       : null;
-    let image = null;
-    if (imagePath && fs.existsSync(imagePath)) {
-      const ext = path.extname(imagePath).toLowerCase();
+    let foodPicture = null;
+    if (foodPicturePath && fs.existsSync(foodPicturePath)) {
+      const ext = path.extname(foodPicturePath).toLowerCase();
       let contentType = 'image/png';
       if (ext === '.jpg' || ext === '.jpeg') contentType = 'image/jpeg';
-      image = {
-        data: fs.readFileSync(imagePath),
-        contentType: contentType, // adjust if needed
-        filename: path.basename(imagePath)
+      foodPicture = {
+        data: fs.readFileSync(foodPicturePath),
+        contentType: contentType
       };
+      //check if foodPicture is imported successfully
+      if (!foodPicture.data) {
+        console.error(`Failed to read image from ${foodPicturePath}`);
+        continue; // Skip this item if image read fails
+      }
+    }
+    else {
+      console.warn(`Image not found for ${item.name} at ${foodPicturePath}`);
     }
     await Food.create({
       name: item.name,
@@ -31,7 +38,7 @@ async function importFood() {
       category: item.category,
       subcategories: item.subcategories,
       price: item.price,
-      image,
+      foodPicture: foodPicture,
       embedding: item.embedding
     });
     console.log(`Imported: ${item.name}`);
@@ -44,18 +51,18 @@ async function updateFood() {
   await connectDB();
   const foodData = JSON.parse(fs.readFileSync(foodJsonPath, 'utf8'));
   for (const item of foodData) {
-    const imagePath = item.image_urls && item.image_urls[0]
-      ? path.join(imagesDir, path.basename(item.image_urls[0]))
+    const foodPicturePath = item.image_urls && item.image_urls[0]
+      ? path.join(foodPicturesDir, path.basename(item.image_urls[0]))
       : null;
-    let image = null;
-    if (imagePath && fs.existsSync(imagePath)) {
-      const ext = path.extname(imagePath).toLowerCase();
+    let foodPicture = null;
+    if (foodPicturePath && fs.existsSync(foodPicturePath)) {
+      const ext = path.extname(foodPicturePath).toLowerCase();
       let contentType = 'image/png';
       if (ext === '.jpg' || ext === '.jpeg') contentType = 'image/jpeg';
-      image = {
-        data: fs.readFileSync(imagePath),
+      foodPicture = {
+        data: fs.readFileSync(foodPicturePath),
         contentType: contentType,
-        filename: path.basename(imagePath)
+        filename: path.basename(foodPicturePath)
       };
     }
     await Food.updateOne(
@@ -66,7 +73,7 @@ async function updateFood() {
           category: item.category,
           subcategories: item.subcategories,
           price: item.price,
-          image,
+          foodPicture,
           embedding: item.embedding
         }
       },

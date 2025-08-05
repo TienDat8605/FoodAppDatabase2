@@ -33,9 +33,7 @@ const handleGetFoodImageByID = async (req, res) => {
       return res.status(404).json({ error: 'Food item or image not found' });
     }
     // return image res.json
-    res.json({
-      foodPicture: food.foodPicture
-    });
+    res.json(food.foodPicture);
     console.log(`Food image for ID ${foodId} fetched successfully`);
   } catch (err) {
     res.status(500).json({ error: 'Server error' });
