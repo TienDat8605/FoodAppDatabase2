@@ -124,7 +124,7 @@ const handleSearch = async (req, res) => {
       query.category = category;
     }
     if (subcategory) {
-      query.subcategories = subcategory;
+      query.subcategories = { $all: Array.isArray(subcategory) ? subcategory : [subcategory] };
     }
     if (rating) {
       query.rating = { $gte: rating }; // Assuming rating is a number and you want to filter by minimum rating
