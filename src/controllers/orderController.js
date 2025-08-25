@@ -47,10 +47,11 @@ const handleCreateOrder = async (req, res) => {
                 name: item.name,
                 toppings: item.toppings,
                 quantity: item.quantity,
-                price: item.price
+                price: item.price,
             })),
             status: 'pending', // Initial status
-            totalPrice: cartItems.reduce((total, item) => total + item.price, 0)
+            totalPrice: cartItems.reduce((total, item) => total + item.price, 0),
+            deliveryAddress: req.body.deliveryAddress, // Ensure delivery address is provided in the request body
         });
         await order.save();
         res.status(201).json(order);
@@ -74,9 +75,9 @@ const handleCancelOrder = async (req, res) => {
         if (!order) {
             return res.status(404).json({ error: 'Order not found' });
         }
-        if (order.status !== 'pending') {
-            return res.status(400).json({ error: 'Only pending orders can be cancelled' });
-        }
+        // if (order.status !== 'pending') {
+        //     return res.status(400).json({ error: 'Only pending orders can be cancelled' });
+        // }
         order.status = 'cancelled';
         await order.save();
         res.json({ message: 'Order cancelled successfully', order });

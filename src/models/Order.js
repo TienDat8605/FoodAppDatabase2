@@ -31,3 +31,5 @@ const orderSchema = new Schema({
 }, {
   timestamps: true, // Automatically manage createdAt and updatedAt fields
 });
+
+module.exports = mongoose.model('Order', orderSchema);

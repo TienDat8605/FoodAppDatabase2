@@ -1,12 +1,12 @@
 const Cart = require('../models/Cart');
 
 const handleGetCartItems = async (req, res) => {
-    const userId = req.user.UserId; // Get userId from authenticated request
+    const userId = req.user.userId; // Get userId from authenticated request
     if (!userId) {
         return res.status(400).json({ error: 'User ID is required' });
     }
     try {
-        const cartItems = await Cart.find({ userId })//.populate('foodId', 'name price foodPicture'); // no need to populate foodId for now
+        const cartItems = await Cart.find({ userId })
         // Check if cartItems is empty
         if (!cartItems || cartItems.length === 0) {
             return res.status(404).json({ error: 'No items found in cart' });
@@ -20,7 +20,7 @@ const handleGetCartItems = async (req, res) => {
 }
 
 const handleAddItemToCart = async (req, res) => {
-    const userId = req.user.UserId; // Get userId from authenticated request
+    const userId = req.user.userId; // Get userId from authenticated request
     if (!userId) {
         return res.status(400).json({ error: 'User ID is required' });
     }
@@ -50,7 +50,7 @@ const handleAddItemToCart = async (req, res) => {
 }
 
 const handleUpdateItemInCart = async (req, res) => { //don't let user update toppings, only quantity, price, selected
-    const userId = req.user.UserId;
+    const userId = req.user.userId;
     if (!userId) {
         return res.status(400).json({ error: 'User ID is required' });
     }
@@ -101,7 +101,7 @@ const handleUpdateItemInCart = async (req, res) => { //don't let user update top
 
 
 const handleRemoveItemFromCart = async (req, res) => {
-    const userId = req.user.UserId; // Get userId from authenticated request
+    const userId = req.user.userId; // Get userId from authenticated request
     if (!userId) {
         return res.status(400).json({ error: 'User ID is required' });
     }
@@ -124,7 +124,7 @@ const handleRemoveItemFromCart = async (req, res) => {
 }
 
 const handleClearSelectedCart = async (req, res) => {
-    const userId = req.user.UserId; // Get userId from authenticated request
+    const userId = req.user.userId; // Get userId from authenticated request
     if (!userId) {
         return res.status(400).json({ error: 'User ID is required' });
     }
@@ -141,7 +141,7 @@ const handleClearSelectedCart = async (req, res) => {
 
 const handleCheckoutCart = async (req, res, next) => {
     //return a lists of items to be ordered (selected items)
-    const userId = req.user.UserId; // Get userId from authenticated request
+    const userId = req.user.userId; // Get userId from authenticated request
     if (!userId) {
         return res.status(400).json({ error: 'User ID is required' });
     }
@@ -153,8 +153,8 @@ const handleCheckoutCart = async (req, res, next) => {
         }
         // Here you would typically create an order from these items (let orderController handle that)
         req.cartItems = cartItems; // Attach cart items to request for further processing
-        next(); // Proceed to the next middleware or controller
         console.log(`Checkout successful for user ${userId}`);
+        next(); // Proceed to the next middleware or controller
     } catch (err) {
         res.status(500).json({ error: 'Server error' });
         console.error('Error during checkout:', err);

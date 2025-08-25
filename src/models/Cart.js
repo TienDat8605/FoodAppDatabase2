@@ -31,3 +31,5 @@ const cartItemSchema = new Schema({
 }, {
   timestamps: true, // Automatically manage createdAt and updatedAt fields
 });
+
+module.exports = mongoose.model('Cart', cartItemSchema);
