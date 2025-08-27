@@ -10,15 +10,7 @@ const similarityFunctions = {
 const handleGetAllFoods = async (req, res) => {
   try {
     const foods = await Food.find({}, { name: 1, description: 1, category: 1, subcategories: 1, price: 1}); // Only needed fields
-    const foodsMap = foods.map(food => ({
-      _id: food._id,
-      name: food.name,
-      description: food.description,
-      category: food.category,
-      subcategories: food.subcategories,
-      price: food.price
-    }));
-    res.json(foodsMap);
+    res.json(foods);
   } catch (err) {
     res.status(500).json({ error: 'Server error' });
     console.error('Error fetching food items:', err);

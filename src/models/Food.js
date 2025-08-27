@@ -22,10 +22,7 @@ const foodSchema = new Schema({
     type: Number,
     default: 0, // Default rating count is 0
   },
-  toppings: [{
-    name: String,
-    price: Number,
-  }]
+  toppings: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Topping' }]
 });
 
 module.exports = mongoose.model('Food', foodSchema);

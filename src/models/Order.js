@@ -9,6 +9,7 @@ const orderSchema = new Schema({
   },
   // Array of cart items
   cartItems: [{
+    foodId: { type: mongoose.Schema.Types.ObjectId, ref: 'Food', required: true },
     name: { type: String, required: true },
     toppings: [{ name: String, price: Number }],
     quantity: { type: Number, required: true, min: 1 },
@@ -27,6 +28,10 @@ const orderSchema = new Schema({
   deliveryAddress: {
     type: String,
     required: true,
+  },
+  cancelReason: {
+    type: String,
+    default: '',
   },
 }, {
   timestamps: true, // Automatically manage createdAt and updatedAt fields
