@@ -8,4 +8,6 @@ router.get('/', authMiddleware, orderController.handleGetOrders);
 // PUT /api/order/:orderId/cancel - cancel an order for authenticated user
 router.put('/:orderId/cancel', authMiddleware, orderController.handleCancelOrder);
 
+router.post('/', authMiddleware, orderController.handleCreateOrder);
+
 module.exports = router;
