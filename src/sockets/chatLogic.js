@@ -1,89 +1,51 @@
 // chatLogic.js
-const ChatMessage = require("../models/ChatMessage");
-const SupportSession = require("../models/SupportSession");
-const User = require("../models/User");
+const Message = require("../models/Message");
+const SupportRoom = require("../models/SupportRoom");
 
 function chatSocket(io) {
   io.on("connection", (socket) => {
-    console.log("New client connected:", socket.id);
+    console.log("Socket connected", socket.id);
 
-    // ---- USER JOINS ----
-    socket.on("joinAsUser", async (userId) => {
-      try {
-        let session = await SupportSession.findOneAndUpdate(
-          { userId },
-          { $setOnInsert: { isResolved: false } },
-          { upsert: true, new: true }
-        );
+    // User or admin joins a room
+    socket.on("joinRoom", async ({ roomId }, cb) => {
+      socket.join(roomId);
 
-        socket.userId = userId;
-        socket.sessionId = session._id; // cache in socket
-        socket.join(session._id.toString()); // join room by session ID
+      // fetch history from DB
+      const history = await Message.find({ roomId }).sort({ createdAt: 1 });
 
-        console.log(`User ${userId} joined with session ${session._id}`);
-      } catch (err) {
-        console.error("joinAsUser error:", err);
-      }
+      if (cb) cb(history);
     });
 
-    // ---- ADMIN JOINS ----
-    socket.on("joinAsAdmin", async (adminId) => {
-      try {
-        const admin = await User.findById(adminId);
-        if (!admin || admin.role !== "admin") {
-          return socket.emit("error", "Unauthorized admin");
-        }
-        socket.userId = adminId;
-        socket.isAdmin = true;
-        console.log(`Admin ${adminId} joined`);
-      } catch (err) {
-        console.error("joinAsAdmin error:", err);
-      }
+    // New message
+    socket.on("chatMessage", async ({ roomId, sender, senderId, text }) => {
+      const msg = await Message.create({
+        roomId,
+        sender,
+        senderId,
+        text,
+        createdAt: new Date()
+      });
+
+      io.to(roomId).emit("chatMessage", msg);
     });
 
-    // ---- ADMIN JOINS USER SESSION ----
-    socket.on("joinUserSession", async ({ adminId, userId }) => {
-      try {
-        // Find the support session for this user and cache sessionId on the admin socket
-        const session = await SupportSession.findOne({ userId });
-        if (session) {
-          socket.sessionId = session._id;
-          socket.join(session._id.toString()); // join room by session ID
-          console.log(`Admin ${adminId} joined ${userId}'s session (sessionId: ${session._id})`);
-        } else {
-          console.log(`Admin ${adminId} joined ${userId}'s session (no session found)`);
-        }
-      } catch (err) {
-        console.error("joinUserSession error:", err);
-      }
+    // Admin requests all active rooms
+    socket.on("getRooms", async (cb) => {
+      const rooms = await SupportRoom.find({ isOpen: true })
+        .populate("userId", "email");
+      cb(rooms);
     });
+    // Admin closes a ticket
+    socket.on("closeRoom", async (roomId, cb) => {
+      const room = await SupportRoom.findByIdAndUpdate(
+        roomId,
+        { isOpen: false },
+        { new: true }
+      );
+      if (cb) cb(room);
 
-    // ---- CHAT MESSAGE ----
-    socket.on("chatMessage", async (data) => {
-      try {
-        if (!socket.userId) {
-          return socket.emit("error", "You must join first.");
-        }
-        if (!socket.sessionId) {
-          return socket.emit("error", "No active session.");
-        }
-        const msg = await ChatMessage.create({
-          sender: socket.userId,
-          receiver: data.receiverId,
-          message: data.message,
-          sessionId: socket.sessionId
-        });
-        io.to(socket.sessionId).emit("chatMessage", msg);
-      } catch (err) {
-        console.error("chatMessage error:", err);
-      }
-    });
-
-
-
-    // ---- DISCONNECT ----
-    socket.on("disconnect", () => {
-      console.log("Client disconnected:", socket.id);
+      // notify users in the room
+      io.to(roomId).emit("roomClosed", { roomId });
     });
   });
 }
