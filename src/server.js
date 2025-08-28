@@ -42,6 +42,7 @@ app.use('/api/cart', require('./routes/api/cart'));
 app.use('/api/order', require('./routes/api/order'));
 app.use('/api/review', require('./routes/api/review'));
 app.use('/api/topping', require('./routes/api/topping'));
+app.use('/api/favorite', require('./routes/api/favorite'));
 //Socket.io for real-time chat
 const http = require('http');
 const { Server } = require('socket.io');

@@ -102,6 +102,28 @@ const handleUpdateConfirmToDelivered = async (req, res) => {
     }
 }
 
+const handleUpdatePendingToConfirmed = async (req, res) => {
+    const userId = req.user.userId; // Get userId from authenticated request
+    try{
+        const orderId = req.params.orderId; // Get order ID from request parameters
+        const order = await Order.findOne({ _id: orderId, userId });
+        if (!order) {
+            return res.status(404).json({ error: 'Order not found' });
+        }
+        if (order.status !== 'pending') {
+            return res.status(400).json({ error: 'Only pending orders can be confirmed' });
+        }
+        order.status = 'confirmed';
+        await order.save();
+        res.json({ message: 'Order confirmed successfully', order });
+        console.log(`Order ${orderId} confirmed for user ${userId}`);
+    }
+    catch(err){
+        res.status(500).json({ error: 'Server error' });
+        console.error('Error updating order status:', err);
+    }
+}
+
 // Rethink about update order status, maybe use a cron job to update all pending orders every 30 seconds 
 // or use a websocket to update order status in real-time 
 // or just let frontend handle it after getting the list of orders 
@@ -111,4 +133,5 @@ module.exports = {
     handleCreateOrder,
     handleCancelOrder,
     handleUpdateConfirmToDelivered,
+    handleUpdatePendingToConfirmed
 };
