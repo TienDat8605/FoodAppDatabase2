@@ -14,4 +14,6 @@ router.post('/searchByCategory', foodController.handleSearchByCategory);
 router.post('/searchBySubcategory', foodController.handleSearchBySubcategory);
 // search food items by category, subcategory, and rating
 router.post('/search', foodController.handleSearch);
+// get food item by ID
+router.get('/:id', foodController.handleGetFoodByID);
 module.exports = router;

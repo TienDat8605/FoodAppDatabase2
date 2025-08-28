@@ -40,7 +40,6 @@ app.use('/api/profile', require('./routes/api/profile'));
 app.use('/api/food', require('./routes/api/food'));
 app.use('/api/cart', require('./routes/api/cart'));
 app.use('/api/order', require('./routes/api/order'));
-app.use('/api/support', require('./routes/api/support'));
 
 //Socket.io for real-time chat
 const http = require('http');
