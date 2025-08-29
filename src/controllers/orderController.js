@@ -48,9 +48,12 @@ const handleGetOrderById = async (req, res) => {
 }
 
 const handleCreateOrder = async (req, res) => {
-    const userId = req.user.userId; // Get userId from authenticated request
-    const cartItemsReq = req.cartItems; // Get cart items from previous middleware
-    if (!cartItemsReq || cartItemsReq.length === 0) {
+    const userId = req.user.userId
+    if (!userId) {
+        return res.status(400).json({ error: 'User ID is required' });
+    }
+    const cartItems = req.cartItems; // Get cart items from previous middleware
+    if (!cartItems || cartItems.length === 0) {
         return res.status(400).json({ error: 'No items to order' });
     }
     try {
@@ -86,8 +89,8 @@ const handleCancelOrder = async (req, res) => {
         if (!order) {
             return res.status(404).json({ error: 'Order not found' });
         }
-        if (order.status !== 'pending') {
-            return res.status(400).json({ error: 'Only pending orders can be cancelled' });
+        if (order.status !== 'confirmed' && order.status !== 'pending') {
+            return res.status(400).json({ error: 'Only pending or confirmed orders can be cancelled' });
         }
         order.status = 'cancelled';
         await order.save();
@@ -98,6 +101,33 @@ const handleCancelOrder = async (req, res) => {
         console.error('Error cancelling order:', err);
     }
 }
+
+const handleCompleteOrder = async (req, res) => {
+    // Check if the order exists and is pending, then update its status to 'cancelled'
+    // else if the order is confirmed or delivered, return an error
+    const userId = req.user.userId;
+    if (!userId) {
+        return res.status(400).json({ error: 'User ID is required' });
+    }
+    try {
+        const orderId = req.params.orderId; // Get order ID from request parameters
+        const order = await Order.findOne({ _id: orderId, userId });
+        if (!order) {
+            return res.status(404).json({ error: 'Order not found' });
+        }
+        // if (order.status !== 'pending') {
+        //     return res.status(400).json({ error: 'Only pending orders can be cancelled' });
+        // }
+        order.status = 'delivered';
+        await order.save();
+        res.json({ message: 'Order delivered successfully', order });
+        console.log(`Order ${orderId}  deliverred for user ${userId}`);
+    } catch (err) {
+        res.status(500).json({ error: 'Server error' });
+        console.error('Error delivering order:', err);
+    }
+}
+
 
 const handleUpdateConfirmToDelivered = async (req, res) => {
     const userId = req.user.userId; // Get userId from authenticated request
@@ -152,5 +182,8 @@ module.exports = {
     handleCreateOrder,
     handleCancelOrder,
     handleUpdateConfirmToDelivered,
-    handleUpdatePendingToConfirmed
+    handleUpdatePendingToConfirmed,
+    handleGetOrderById,
+    handleCompleteOrder,
+    // handleUpdatePendingOrderStatus
 };

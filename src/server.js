@@ -1,4 +1,6 @@
 require('dotenv').config(); // Load .env variables
+// const path = require('path');
+// require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 const PORT = process.env.PORT;
 
 const helmet = require('helmet');
