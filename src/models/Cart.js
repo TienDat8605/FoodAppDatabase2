@@ -6,6 +6,11 @@ const cartItemSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
+  },
+  foodId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Food',
+    required: true,
   },  
   name:{
     type: String,

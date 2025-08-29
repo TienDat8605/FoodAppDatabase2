@@ -2,9 +2,6 @@ const Cart = require('../models/Cart');
 
 const handleGetCartItems = async (req, res) => {
     const userId = req.user.userId; // Get userId from authenticated request
-    if (!userId) {
-        return res.status(400).json({ error: 'User ID is required' });
-    }
     try {
         const cartItems = await Cart.find({ userId })
         // Check if cartItems is empty
@@ -21,11 +18,8 @@ const handleGetCartItems = async (req, res) => {
 
 const handleAddItemToCart = async (req, res) => {
     const userId = req.user.userId; // Get userId from authenticated request
-    if (!userId) {
-        return res.status(400).json({ error: 'User ID is required' });
-    }
     try{
-        const { name, toppings, quantity, price } = req.body; 
+        const { foodId, name, toppings, quantity, price } = req.body; 
         if (!name || !quantity || !price) {
             return res.status(400).json({ error: 'name and quantity and price are required' });
         }
@@ -37,7 +31,7 @@ const handleAddItemToCart = async (req, res) => {
             await cartItem.save();
         } else {
             // Create new cart item
-            cartItem = new Cart({ userId, name, toppings, quantity, price });
+            cartItem = new Cart({ userId, foodId, name, toppings, quantity, price });
             await cartItem.save();
         }
         res.status(201).json(cartItem);
@@ -49,14 +43,11 @@ const handleAddItemToCart = async (req, res) => {
     }
 }
 
-const handleUpdateItemInCart = async (req, res) => { //don't let user update toppings, only quantity, price, selected
-    const userId = req.user.userId;
-    if (!userId) {
-        return res.status(400).json({ error: 'User ID is required' });
-    }
+const handleUpdateItemInCart = async (req, res) => { //let user update toppings, quantity, price, selected
+    const userId = req.user.userId; // Get userId from authenticated request
     try {
         const cartItemId = req.params.cartItemId; // Get cart item ID from request parameters
-        const { quantity, price, selected } = req.body;
+        const { toppings, quantity, price, selected } = req.body;
         // Validate cartItemId presence
         if (!cartItemId) {
             return res.status(400).json({ error: 'Cart item Id is required' });
@@ -77,6 +68,9 @@ const handleUpdateItemInCart = async (req, res) => { //don't let user update top
                 return res.status(400).json({ error: 'Price must be a positive number' });
             }
             updateFields.price = price;
+        }
+        if (toppings !== undefined) {
+            updateFields.toppings = toppings;
         }
         // Ensure at least one field is being updated
         if (Object.keys(updateFields).length === 0) {
@@ -102,9 +96,6 @@ const handleUpdateItemInCart = async (req, res) => { //don't let user update top
 
 const handleRemoveItemFromCart = async (req, res) => {
     const userId = req.user.userId; // Get userId from authenticated request
-    if (!userId) {
-        return res.status(400).json({ error: 'User ID is required' });
-    }
     try {
         const { cartItemId } = req.params; // Get cart item ID from request parameters
         if (!cartItemId) {
@@ -125,9 +116,6 @@ const handleRemoveItemFromCart = async (req, res) => {
 
 const handleClearSelectedCart = async (req, res) => {
     const userId = req.user.userId; // Get userId from authenticated request
-    if (!userId) {
-        return res.status(400).json({ error: 'User ID is required' });
-    }
     try {
         // Remove all items from the user's cart
         await Cart.deleteMany({ userId, selected: true });
@@ -142,9 +130,6 @@ const handleClearSelectedCart = async (req, res) => {
 const handleCheckoutCart = async (req, res, next) => {
     //return a lists of items to be ordered (selected items)
     const userId = req.user.userId; // Get userId from authenticated request
-    if (!userId) {
-        return res.status(400).json({ error: 'User ID is required' });
-    }
     try {
         // Find all selected items in the user's cart
         const cartItems = await Cart.find({ userId, selected: true });

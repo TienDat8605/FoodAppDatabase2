@@ -1,14 +1,11 @@
 const Order = require('../models/Order');
 
 const handleGetOrders = async (req, res) => {
-    const userId = req.user.userId
-    if (!userId) {
-        return res.status(400).json({ error: 'User ID is required' });
-    }
+    const userId = req.user.userId; // Get userId from authenticated request
     try {
         const orders = await Order.find({ userId });
         //before return, update the order status (if pending after 60 seconds, set to confirmed)
-         // Check and update status if order is pending for more than 60 seconds
+        // Check and update status if order is pending for more than 60 seconds
         const now = new Date();
         const updatedOrders = await Promise.all(
             orders.map(async (order) => {
@@ -51,25 +48,23 @@ const handleGetOrderById = async (req, res) => {
 }
 
 const handleCreateOrder = async (req, res) => {
-    const userId = req.user.userId
-    if (!userId) {
-        return res.status(400).json({ error: 'User ID is required' });
-    }
-    const cartItems = req.cartItems; // Get cart items from previous middleware
-    if (!cartItems || cartItems.length === 0) {
+    const userId = req.user.userId; // Get userId from authenticated request
+    const cartItemsReq = req.cartItems; // Get cart items from previous middleware
+    if (!cartItemsReq || cartItemsReq.length === 0) {
         return res.status(400).json({ error: 'No items to order' });
     }
     try {
         const order = new Order({
             userId,
-            cartItems: cartItems.map(item => ({
+            cartItems: cartItemsReq.map(item => ({
+                foodId: item.foodId,
                 name: item.name,
                 toppings: item.toppings,
                 quantity: item.quantity,
                 price: item.price,
             })),
             status: 'pending', // Initial status
-            totalPrice: cartItems.reduce((total, item) => total + item.price, 0),
+            totalPrice: cartItemsReq.reduce((total, item) => total + item.price, 0),
             deliveryAddress: req.body.deliveryAddress, // Ensure delivery address is provided in the request body
         });
         await order.save();
@@ -84,19 +79,16 @@ const handleCreateOrder = async (req, res) => {
 const handleCancelOrder = async (req, res) => {
     // Check if the order exists and is pending, then update its status to 'cancelled'
     // else if the order is confirmed or delivered, return an error
-    const userId = req.user.userId;
-    if (!userId) {
-        return res.status(400).json({ error: 'User ID is required' });
-    }
+    const userId = req.user.userId; // Get userId from authenticated request
     try {
         const orderId = req.params.orderId; // Get order ID from request parameters
         const order = await Order.findOne({ _id: orderId, userId });
         if (!order) {
             return res.status(404).json({ error: 'Order not found' });
         }
-        // if (order.status !== 'pending') {
-        //     return res.status(400).json({ error: 'Only pending orders can be cancelled' });
-        // }
+        if (order.status !== 'pending') {
+            return res.status(400).json({ error: 'Only pending orders can be cancelled' });
+        }
         order.status = 'cancelled';
         await order.save();
         res.json({ message: 'Order cancelled successfully', order });
@@ -107,38 +99,49 @@ const handleCancelOrder = async (req, res) => {
     }
 }
 
-const handleCompleteOrder = async (req, res) => {
-    // Check if the order exists and is pending, then update its status to 'cancelled'
-    // else if the order is confirmed or delivered, return an error
-    const userId = req.user.userId;
-    if (!userId) {
-        return res.status(400).json({ error: 'User ID is required' });
-    }
-    try {
+const handleUpdateConfirmToDelivered = async (req, res) => {
+    const userId = req.user.userId; // Get userId from authenticated request
+    try{
         const orderId = req.params.orderId; // Get order ID from request parameters
         const order = await Order.findOne({ _id: orderId, userId });
         if (!order) {
             return res.status(404).json({ error: 'Order not found' });
         }
-        // if (order.status !== 'pending') {
-        //     return res.status(400).json({ error: 'Only pending orders can be cancelled' });
-        // }
+        if (order.status !== 'confirmed') {
+            return res.status(400).json({ error: 'Only confirmed orders can be marked as delivered' });
+        }
         order.status = 'delivered';
         await order.save();
-        res.json({ message: 'Order delivered successfully', order });
-        console.log(`Order ${orderId}  deliverred for user ${userId}`);
-    } catch (err) {
+        res.json({ message: 'Order marked as delivered', order });
+        console.log(`Order ${orderId} marked as delivered for user ${userId}`);
+    }
+    catch(err){
         res.status(500).json({ error: 'Server error' });
-        console.error('Error delivering order:', err);
+        console.error('Error updating order status:', err);
     }
 }
 
-
-// no need for this function, because we will update the order status in handleGetOrders
-// const handleUpdatePendingOrderStatus = async (req, res) => {
-
-// }
-
+const handleUpdatePendingToConfirmed = async (req, res) => {
+    const userId = req.user.userId; // Get userId from authenticated request
+    try{
+        const orderId = req.params.orderId; // Get order ID from request parameters
+        const order = await Order.findOne({ _id: orderId, userId });
+        if (!order) {
+            return res.status(404).json({ error: 'Order not found' });
+        }
+        if (order.status !== 'pending') {
+            return res.status(400).json({ error: 'Only pending orders can be confirmed' });
+        }
+        order.status = 'confirmed';
+        await order.save();
+        res.json({ message: 'Order confirmed successfully', order });
+        console.log(`Order ${orderId} confirmed for user ${userId}`);
+    }
+    catch(err){
+        res.status(500).json({ error: 'Server error' });
+        console.error('Error updating order status:', err);
+    }
+}
 
 // Rethink about update order status, maybe use a cron job to update all pending orders every 30 seconds 
 // or use a websocket to update order status in real-time 
@@ -148,7 +151,6 @@ module.exports = {
     handleGetOrders,
     handleCreateOrder,
     handleCancelOrder,
-    handleGetOrderById,
-    handleCompleteOrder,
-    // handleUpdatePendingOrderStatus
+    handleUpdateConfirmToDelivered,
+    handleUpdatePendingToConfirmed
 };

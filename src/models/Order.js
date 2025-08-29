@@ -32,6 +32,10 @@ const orderSchema = new Schema({
     type: String,
     required: true,
   },
+  cancelReason: {
+    type: String,
+    default: '',
+  },
 }, {
   timestamps: true, // Automatically manage createdAt and updatedAt fields
 });

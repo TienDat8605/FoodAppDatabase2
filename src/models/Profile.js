@@ -10,6 +10,10 @@ const profileSchema = new Schema({
   profilePicture: {
     data: Buffer,
     contentType: String,
+  },
+  latlng: {
+    lat: { type: Number, default: 10.762869855324613 },
+    lng: { type: Number, default: 106.68249581084027 }
   }
 });
 

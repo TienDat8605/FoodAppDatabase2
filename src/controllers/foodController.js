@@ -9,14 +9,17 @@ const similarityFunctions = {
 
 const handleGetAllFoods = async (req, res) => {
   try {
-    const foods = await Food.find({}, { name: 1, description: 1, category: 1, subcategories: 1, price: 1}); // Only needed fields
-    const foodsMap = foods.map(food => ({
+    const foods = await Food.find({}, { name: 1, description: 1, category: 1, subcategories: 1, price: 1, rating: 1, ratingCount:1, toppings: 1}); // Only needed fields
+    const foodsMap = foods.map(food => ({ // Map to only necessary fields (no image or embedding)
       _id: food._id,
       name: food.name,
       description: food.description,
       category: food.category,
       subcategories: food.subcategories,
-      price: food.price
+      price: food.price,
+      rating: food.rating,
+      ratingCount: food.ratingCount,
+      toppings: food.toppings
     }));
     res.json(foodsMap);
   } catch (err) {
@@ -24,6 +27,31 @@ const handleGetAllFoods = async (req, res) => {
     console.error('Error fetching food items:', err);
   }
 }
+
+const handleGetFoodByID = async (req, res) => {
+  const foodId = req.params.id;
+  try {
+    const food = await Food.findById(foodId, { name: 1, description: 1, category: 1, subcategories: 1, price: 1, rating: 1, ratingCount:1, toppings: 1}); // Only needed fields
+    if (!food) {
+      return res.status(404).json({ error: 'Food item not found' });
+    }
+    const foodMap = {
+      _id: food._id,
+      name: food.name,
+      description: food.description,
+      category: food.category,
+      subcategories: food.subcategories,
+      price: food.price,
+      rating: food.rating,
+      ratingCount: food.ratingCount,
+      toppings: food.toppings
+    };
+    res.json(foodMap);
+  } catch (err) {
+    res.status(500).json({ error: 'Server error' });
+    console.error('Error fetching food item:', err);
+  }
+} 
 
 const handleGetFoodImageByID = async (req, res) => {
   const foodId = req.params.id;
@@ -152,5 +180,6 @@ module.exports = {
   handleSearchByEmbedding,
   handleSearchByCategory,
   handleSearchBySubcategory,
-  handleSearch
+  handleSearch,
+  handleGetFoodByID
 };
