@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-require('dotenv').config();   // ensure .env is loaded
+//require('dotenv').config();   // ensure .env is loaded
+require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') });   // ensure .env is loaded from project root
 
 const url = process.env.MONGODB_URI;
 if (!url) {

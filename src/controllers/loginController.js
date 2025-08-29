@@ -10,11 +10,12 @@ const handleLogin = async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ error: 'Invalid credentials' });
+      return res.status(400).json({ error: 'Invalid credentials: Email' });
     }
     const isValid = await bcrypt.compare(password, user.password);
+    // const isValid = password === user.password;
     if (!isValid) {
-      return res.status(400).json({ error: 'Invalid credentials' });
+      return res.status(400).json({ error: 'Invalid credentials: Password' });
     }
     // Generate JWT
     const token = jwt.sign(

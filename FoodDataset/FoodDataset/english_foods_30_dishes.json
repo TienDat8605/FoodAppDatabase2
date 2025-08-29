@@ -1,0 +1,302 @@
+[
+  {
+    "name": "Pho Bo (Beef Noodles)",
+    "description": "Fragrant rice noodle soup with tender beef slices, simmered in a star anise and cinnamon broth, served with fresh herbs, bean sprouts, and lime.",
+    "category": "Meal",
+    "subcategories": ["Savory", "Umami", "Light"],
+    "price": 3.50,
+    "image_urls": [
+      "./images/phobo.png"
+    ]
+  },
+  {
+    "name": "Banh Mi Thit (Pork Sandwich)",
+    "description": "Crusty baguette filled with pork, pâté, pickled carrots, daikon, cucumber, cilantro, and a dash of chili sauce.",
+    "category": "Meal",
+    "subcategories": ["Savory", "Spicy", "Hearty"],
+    "price": 2.00,
+    "image_urls": [
+      "./images/banhmithit.png"
+    ]
+  },
+  {
+    "name": "Che Ba Mau (Three-Color Dessert)",
+    "description": "Layered dessert of red beans, mung beans, and pandan jelly, topped with coconut milk and served chilled.",
+    "category": "Dessert",
+    "subcategories": ["Sweet", "Chilled", "Creamy"],
+    "price": 1.50,
+    "image_urls": [
+      "./images/chebamau.png"
+    ]
+  },
+  {
+    "name": "Goi Cuon (Fresh Spring Rolls)",
+    "description": "Rice paper rolls filled with shrimp, pork, rice vermicelli, lettuce, and herbs, served with peanut dipping sauce.",
+    "category": "Snacks",
+    "subcategories": ["Fresh", "Savory", "Portable"],
+    "price": 1.20,
+    "image_urls": [
+      "./images/goicuon.png"
+    ]
+  },
+  {
+    "name": "Bun Cha (Grilled Pork Noodles)",
+    "description": "Grilled pork patties and pork belly with rice vermicelli, fresh herbs, and tangy fish sauce dipping broth.",
+    "category": "Meal",
+    "subcategories": ["Savory", "Sweet", "Light"],
+    "price": 3.00,
+    "image_urls": [
+      "./images/buncha.png"
+    ]
+  },
+  {
+    "name": "Rau Muong Xao Toi (Stir-fried Water Spinach)",
+    "description": "Crunchy morning glory stir-fried with garlic, offering a simple yet savory flavor.",
+    "category": "Vegan",
+    "subcategories": ["Stir-fried", "Savory", "Fresh"],
+    "price": 1.00,
+    "image_urls": [
+      "./images/raumuongxaotoi.png"
+    ]
+  },
+  {
+    "name": "Banh Xeo (Crispy Pancake)",
+    "description": "Crispy rice flour pancake filled with shrimp, pork, bean sprouts, and mung beans, served with herbs and fish sauce.",
+    "category": "Meal",
+    "subcategories": ["Savory", "Crispy", "Hearty"],
+    "price": 2.50,
+    "image_urls": [
+      "./images/banhxeo.png"
+    ]
+  },
+  {
+    "name": "Cha Gio (Fried Spring Rolls)",
+    "description": "Crispy fried rolls with pork, shrimp, and vegetables, served with tangy fish sauce dip.",
+    "category": "Snacks",
+    "subcategories": ["Crispy", "Savory", "Fried"],
+    "price": 1.00,
+    "image_urls": [
+      "./images/chagio.png"
+    ]
+  },
+  {
+    "name": "Banh Cuon (Steamed Rice Rolls)",
+    "description": "Steamed rice flour rolls filled with minced pork, wood ear mushrooms, and shallots, topped with fried onions.",
+    "category": "Meal",
+    "subcategories": ["Savory", "Light", "Umami"],
+    "price": 2.00,
+    "image_urls": [
+      "./images/banhcuon.png"
+    ]
+  },
+  {
+    "name": "Ca Phe Trung (Egg Coffee)",
+    "description": "Creamy coffee topped with whipped egg yolk and condensed milk, served warm or chilled.",
+    "category": "Dessert",
+    "subcategories": ["Creamy", "Warm", "Sweet"],
+    "price": 2.50,
+    "image_urls": [
+      "./images/caphetrung.png"
+    ]
+  },
+  {
+    "name": "Bun Bo Hue (Spicy Beef Noodles)",
+    "description": "Spicy beef noodle soup with lemongrass, pork knuckles, and blood pudding, garnished with herbs.",
+    "category": "Meal",
+    "subcategories": ["Spicy", "Savory", "Hearty"],
+    "price": 3.80,
+    "image_urls": [
+      "./images/bunbohue.png"
+    ]
+  },
+  {
+    "name": "Com Tam (Broken Rice Plate)",
+    "description": "Broken rice served with grilled pork chop, pickled vegetables, and a fried egg, with fish sauce on the side.",
+    "category": "Meal",
+    "subcategories": ["Savory", "Hearty", "Umami"],
+    "price": 2.80,
+    "image_urls": [
+      "./images/comtam.png"
+    ]
+  },
+  {
+    "name": "Che Dau Trang (Black-Eyed Pea Dessert)",
+    "description": "Sweet black-eyed pea pudding with sticky rice and coconut milk, served chilled.",
+    "category": "Dessert",
+    "subcategories": ["Sweet", "Chilled", "Chewy"],
+    "price": 1.20,
+    "image_urls": [
+      "./images/chedautrang.png"
+    ]
+  },
+  {
+    "name": "Goi Ngo Sen (Lotus Stem Salad)",
+    "description": "Crunchy lotus stem salad with shrimp, pork, herbs, and roasted peanuts, dressed in fish sauce.",
+    "category": "Meal",
+    "subcategories": ["Sour", "Fresh", "Light"],
+    "price": 2.20,
+    "image_urls": [
+      "./images/goingosen.png"
+    ]
+  },
+  {
+    "name": "Banh Chung (Sticky Rice Cake)",
+    "description": "Glutinous rice cake filled with pork and mung bean, wrapped in banana leaves, traditionally steamed for hours.",
+    "category": "Meal",
+    "subcategories": ["Savory", "Hearty", "Umami"],
+    "price": 3.00,
+    "image_urls": [
+      "./images/banhchung.png"
+    ]
+  },
+  {
+    "name": "Nom Hoa Chuoi (Banana Blossom Salad)",
+    "description": "Shredded banana blossom mixed with herbs, peanuts, and a tangy vegan dressing.",
+    "category": "Vegan",
+    "subcategories": ["Fresh", "Raw", "Sour"],
+    "price": 1.50,
+    "image_urls": [
+      "./images/nomhoachuoi.png"
+    ]
+  },
+  {
+    "name": "Banh Bot Loc (Tapioca Dumplings)",
+    "description": "Translucent tapioca dumplings filled with shrimp and pork, served with fish sauce and chili.",
+    "category": "Snacks",
+    "subcategories": ["Chewy", "Savory", "Portable"],
+    "price": 1.10,
+    "image_urls": [
+      "./images/banhbotloc.png"
+    ]
+  },
+  {
+    "name": "Ca Kho To (Caramelized Fish)",
+    "description": "Fish braised in a clay pot with caramel sauce, black pepper, and shallots, served with rice.",
+    "category": "Meal",
+    "subcategories": ["Savory", "Sweet", "Umami"],
+    "price": 3.20,
+    "image_urls": [
+      "./images/cakhoto.png"
+    ]
+  },
+  {
+    "name": "Che Bap (Corn Pudding)",
+    "description": "Sweet corn and sticky rice dessert topped with coconut cream and sesame seeds.",
+    "category": "Dessert",
+    "subcategories": ["Sweet", "Creamy", "Chilled"],
+    "price": 1.30,
+    "image_urls": [
+      "./images/chebap.png"
+    ]
+  },
+  {
+    "name": "Cha Ca La Vong (Turmeric Fish)",
+    "description": "Grilled fish marinated in turmeric and dill, served with rice noodles, herbs, and peanuts.",
+    "category": "Meal",
+    "subcategories": ["Savory", "Light", "Umami"],
+    "price": 4.00,
+    "image_urls": [
+      "./images/chacalavong.png"
+    ]
+  },
+  {
+    "name": "Banh Beo (Steamed Rice Cakes)",
+    "description": "Tiny steamed rice cakes topped with ground shrimp, scallions, and fried shallots, served with fish sauce.",
+    "category": "Snacks",
+    "subcategories": ["Savory", "Portable", "Light"],
+    "price": 1.00,
+    "image_urls": [
+      "./images/banhbeo.png"
+    ]
+  },
+  {
+    "name": "Dau Phu Nuoc Duong (Tofu Pudding)",
+    "description": "Silky tofu pudding served with sweet ginger syrup and coconut milk.",
+    "category": "Dessert",
+    "subcategories": ["Sweet", "Chilled", "Creamy"],
+    "price": 1.00,
+    "image_urls": [
+      "./images/dauphunuocduong.png"
+    ]
+  },
+  {
+    "name": "Canh Chua (Sour Soup)",
+    "description": "Tangy tamarind-based soup with fish, pineapple, tomatoes, and herbs, often served with rice.",
+    "category": "Meal",
+    "subcategories": ["Sour", "Savory", "Light"],
+    "price": 2.50,
+    "image_urls": [
+      "./images/canhchua.png"
+    ]
+  },
+  {
+    "name": "Dau Phu Sot Ca (Tofu in Tomato Sauce)",
+    "description": "Fried tofu simmered in a rich tomato sauce with onions and herbs.",
+    "category": "Vegan",
+    "subcategories": ["Savory", "Stir-fried", "Spicy"],
+    "price": 1.20,
+    "image_urls": [
+      "./images/dauphusotca.png"
+    ]
+  },
+  {
+    "name": "Banh Khoai (Hue Pancake)",
+    "description": "Crispy pancake filled with shrimp, pork, and bean sprouts, served with peanut sauce.",
+    "category": "Meal",
+    "subcategories": ["Savory", "Crispy", "Hearty"],
+    "price": 2.30,
+    "image_urls": [
+      "./images/banhkhoai.png"
+    ]
+  },
+  {
+    "name": "Xoi Ga (Sticky Rice with Chicken)",
+    "description": "Glutinous rice topped with shredded chicken, fried shallots, and a side of chili sauce.",
+    "category": "Meal",
+    "subcategories": ["Savory", "Hearty", "Umami"],
+    "price": 2.00,
+    "image_urls": [
+      "./images/xoiga.png"
+    ]
+  },
+  {
+    "name": "Banh Da Lon (Layered Sticky Cake)",
+    "description": "Layered sticky rice cake with pandan and mung bean, steamed and slightly sweet.",
+    "category": "Dessert",
+    "subcategories": ["Sweet", "Chewy", "Fruity"],
+    "price": 1.50,
+    "image_urls": [
+      "./images/banhdalon.png"
+    ]
+  },
+  {
+    "name": "Nem Chua (Fermented Pork Roll)",
+    "description": "Spicy, tangy fermented pork rolls wrapped in banana leaves, served as a snack.",
+    "category": "Snacks",
+    "subcategories": ["Spicy", "Savory", "Portable"],
+    "price": 0.80,
+    "image_urls": [
+      "./images/nemchua.png"
+    ]
+  },
+  {
+    "name": "Goi Du Du (Papaya Salad)",
+    "description": "Shredded green papaya with dried beef, herbs, and a spicy fish sauce dressing.",
+    "category": "Meal",
+    "subcategories": ["Sour", "Spicy", "Fresh"],
+    "price": 2.00,
+    "image_urls": [
+      "./images/goidudu.png"
+    ]
+  },
+  {
+    "name": "Banh It Tran (Sticky Rice Dumplings)",
+    "description": "Glutinous rice dumplings filled with mung bean and shrimp, served with fish sauce.",
+    "category": "Snacks",
+    "subcategories": ["Chewy", "Savory", "Portable"],
+    "price": 1.00,
+    "image_urls": [
+      "./images/banhittran.png"
+    ]
+  }
+]

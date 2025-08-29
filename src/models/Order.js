@@ -9,6 +9,10 @@ const orderSchema = new Schema({
   },
   // Array of cart items
   cartItems: [{
+    foodId : { 
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: 'Food', 
+      required: true },
     name: { type: String, required: true },
     toppings: [{ name: String, price: Number }],
     quantity: { type: Number, required: true, min: 1 },

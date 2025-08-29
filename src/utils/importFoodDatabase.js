@@ -4,8 +4,8 @@ const path = require('path');
 const Food = require('../models/Food');
 const connectDB = require('../config/database');
 
-const foodJsonPath = path.join(__dirname, '../../foodDatabase/food_with_embeddings.json');
-const foodPicturesDir = path.join(__dirname, '../../foodDatabase/images');
+const foodJsonPath = path.join(__dirname, '../../FoodDataset/FoodDataset/english_foods_30_dishes.json');
+const foodPicturesDir = path.join(__dirname, '../../FoodDataset/FoodDataset/images');
 
 async function importFood() {
   await connectDB();
@@ -39,7 +39,7 @@ async function importFood() {
       subcategories: item.subcategories,
       price: item.price,
       foodPicture: foodPicture,
-      embedding: item.embedding
+      embedding: [0]
     });
     console.log(`Imported: ${item.name}`);
   }
