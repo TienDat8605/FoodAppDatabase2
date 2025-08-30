@@ -4,6 +4,7 @@ const { Schema } = mongoose;
 const toppingSchema = new Schema({
   name: { type: String, required: true },
   price: { type: Number, required: true },
+  category: { type: String, required: true },
 });
 
-const Topping = mongoose.model('Topping', toppingSchema);
+module.exports = mongoose.model('Topping', toppingSchema);
