@@ -1,5 +1,6 @@
 const Food = require('../models/Food');
 const similarity = require('../utils/similarityFunction'); 
+const Order = require('../models/Order');
 
 const similarityFunctions = {
   cosine: similarity.cosineSimilarity,
@@ -182,6 +183,82 @@ const handleSearch = async (req, res) => {
   }
 }
 
+// Get best sellers based on order data (top 5) for each category
+// Best sellers are determined by the number of times a food item appears in orders
+const handleGetBestSellers = async (req, res) => {
+  try {
+    let bestSellers = await Order.aggregate([
+      { $unwind: "$cartItems" },
+      {
+        $group: {
+          _id: "$cartItems.foodId",
+          count: { $sum: 1 } // keep original logic
+        }
+      },
+      {
+        $lookup: {
+          from: "foods",
+          localField: "_id",
+          foreignField: "_id",
+          as: "food"
+        }
+      },
+      { $unwind: "$food" },
+      {
+        $group: {
+          _id: "$food.category",
+          foods: {
+            $push: {
+              _id: "$food._id",
+              count: "$count"
+            }
+          }
+        }
+      },
+      {
+        $project: {
+          category: "$_id",
+          bestSellers: {
+            $slice: [
+              { $sortArray: { input: "$foods", sortBy: { count: -1 } } },
+              5
+            ]
+          },
+          _id: 0
+        }
+      }
+    ]);
+
+    // 🔑 always ensure 5 items
+    for (let i = 0; i < bestSellers.length; i++) {
+      const sellers = bestSellers[i].bestSellers;
+      const missing = 5 - sellers.length;
+
+      if (missing > 0) {
+        const extraFoods = await Food.find({
+          category: bestSellers[i].category,
+          _id: { $nin: sellers.map(f => f._id) }
+        })
+          .limit(missing)
+          .lean();
+
+        for (const food of extraFoods) {
+          sellers.push({
+            _id: food._id,
+            count: 0 // never ordered
+          });
+        }
+      }
+    }
+
+    res.json(bestSellers);
+  } catch (err) {
+    console.error("Error fetching best sellers:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+
 module.exports = {
   handleGetAllFoods,
   handleGetFoodImageByID,
@@ -189,5 +266,6 @@ module.exports = {
   handleSearchByCategory,
   handleSearchBySubcategory,
   handleSearch,
-  handleGetFoodByID
+  handleGetFoodByID,
+  handleGetBestSellers
 };

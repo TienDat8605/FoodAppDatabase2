@@ -70,11 +70,22 @@ async function updateFood() {
   }
 }
 
+// update default rating of all food items to 5
+async function updateDefaultRatings() {
+  const foods = await Food.find({});
+  for (const food of foods) {
+    food.rating = 5;
+    await food.save();
+    console.log(`Updated food: ${food.name} with default rating 5`);
+  }
+}
+
 async function main() {
   await connectDB();
-  await importFood();
-  await importToppings();
-  await updateFood();
+  // await importFood();
+  // await importToppings();
+  // await updateFood();
+  await updateDefaultRatings();
   mongoose.connection.close();
 }
 

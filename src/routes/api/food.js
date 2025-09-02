@@ -16,4 +16,6 @@ router.post('/searchBySubcategory', foodController.handleSearchBySubcategory);
 router.post('/search', foodController.handleSearch);
 // get food item by ID
 router.get('/:id', foodController.handleGetFoodByID);
+// get best sellers food items
+router.get('/bestSellers', foodController.handleGetBestSellers);
 module.exports = router;

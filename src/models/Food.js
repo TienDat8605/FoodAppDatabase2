@@ -15,7 +15,7 @@ const foodSchema = new Schema({
   //rating
   rating: {
     type: Number,
-    default: 0, // Default rating is 0
+    default: 5, // Default rating is 5
   },
   //ratingCount
   ratingCount: {
