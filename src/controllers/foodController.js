@@ -141,10 +141,10 @@ const handleSearchBySubcategory = async (req, res) => {
 }
 
 const handleSearch = async (req, res) => {
-  //TODO: Implement search functionality (search by category. subcategory, rating)
+  // Search by category, subcategory, rating, and price range
   try {
-    const { category, subcategory, rating } = req.body;
-    if (!category && !subcategory && !rating) {
+    const { category, subcategory, rating, minPrice, maxPrice } = req.body;
+    if (!category && !subcategory && !rating && minPrice == null && maxPrice == null) {
       return res.status(400).json({ error: 'At least one search parameter is required' });
     }
     const query = {};
@@ -153,9 +153,14 @@ const handleSearch = async (req, res) => {
     }
     if (subcategory) {
       query.subcategories = { $in: Array.isArray(subcategory) ? subcategory : [subcategory] };
-    }    
+    }
     if (rating) {
-      query.rating = { $gte: rating }; // Assuming rating is a number and you want to filter by minimum rating
+      query.rating = { $gte: rating };
+    }
+    if (minPrice != null || maxPrice != null) {
+      query.price = {};
+      if (minPrice != null) query.price.$gte = minPrice;
+      if (maxPrice != null) query.price.$lte = maxPrice;
     }
     const foods = await Food.find(query, { _id: 1, name: 1, description: 1, price: 1, foodPicture: 1 });
     if (foods.length === 0) {
@@ -165,13 +170,16 @@ const handleSearch = async (req, res) => {
     const result = foods.map(food => ({
       _id: food._id,
       name: food.name,
+      category: food.category,
+      subcategories: food.subcategories,
+      rating: food.rating,
+      price: food.price
     }));
     res.json(result);
   } catch (err) {
     res.status(500).json({ error: 'Server error' });
     console.error('Error searching food items:', err);
   }
-
 }
 
 module.exports = {
