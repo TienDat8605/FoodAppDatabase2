@@ -61,14 +61,14 @@ const handleGetFoodImageByID = async (req, res) => {
     if (!food || !food.foodPicture || !food.foodPicture.data) {
       return res.status(404).json({ error: 'Food item or image not found' });
     }
-    // return image res.json
-    res.json(food.foodPicture);
-    console.log(`Food image for ID ${foodId} fetched successfully`);
+    res.set("Content-Type", food.foodPicture.contentType);
+    res.send(food.foodPicture.data); // Send raw binary
   } catch (err) {
     res.status(500).json({ error: 'Server error' });
     console.error('Error fetching food image:', err);
   }
-}
+};
+
 
 const handleSearchByEmbedding = async (req, res) => {
   const { embedding, similarityModel } = req.body; // Assuming embedding is passed as a query parameter

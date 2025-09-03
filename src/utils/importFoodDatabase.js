@@ -9,6 +9,20 @@ const foodJsonPath = path.join(__dirname, '../../foodDatabase/food_with_embeddin
 const foodPicturesDir = path.join(__dirname, '../../foodDatabase/images');
 
 async function importFood() {
+    try {
+    // Drop collection if it exists
+    if (await Food.collection.countDocuments() > 0) {
+      await Food.collection.drop();
+      console.log("Dropped existing foods collection");
+    }
+  } catch (err) {
+    // Ignore "ns not found" error (collection doesn’t exist yet)
+    if (err.code === 26) {
+      console.log("foods collection does not exist, skipping drop");
+    } else {
+      throw err;
+    }
+  }
   const foodData = JSON.parse(fs.readFileSync(foodJsonPath, 'utf8'));
   for (const item of foodData) {
     const foodPicturePath = item.image_urls && item.image_urls[0]
@@ -82,10 +96,10 @@ async function updateDefaultRatings() {
 
 async function main() {
   await connectDB();
-  // await importFood();
+  await importFood();
   // await importToppings();
-  // await updateFood();
-  await updateDefaultRatings();
+  await updateFood();
+  // await updateDefaultRatings();
   mongoose.connection.close();
 }
 
