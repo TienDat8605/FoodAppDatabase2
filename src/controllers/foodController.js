@@ -187,12 +187,15 @@ const handleSearch = async (req, res) => {
 // Best sellers are determined by the number of times a food item appears in orders
 const handleGetBestSellers = async (req, res) => {
   try {
-    let bestSellers = await Order.aggregate([
-      { $unwind: "$cartItems" },
+    // Step 1: get all categories
+    const categories = ["Meal", "Dessert", "Snacks", "Vegan", "Drinks"];
+    // Step 2: aggregate counts from Order
+    const bestSellers = await Order.aggregate([
+      { $unwind: "$items" },
       {
         $group: {
-          _id: "$cartItems.foodId",
-          count: { $sum: 1 } // keep original logic
+          _id: "$items.food",
+          count: { $sum: "$items.quantity" }
         }
       },
       {
@@ -205,39 +208,35 @@ const handleGetBestSellers = async (req, res) => {
       },
       { $unwind: "$food" },
       {
-        $group: {
-          _id: "$food.category",
-          foods: {
-            $push: {
-              _id: "$food._id",
-              count: "$count"
-            }
-          }
-        }
-      },
-      {
         $project: {
-          category: "$_id",
-          bestSellers: {
-            $slice: [
-              { $sortArray: { input: "$foods", sortBy: { count: -1 } } },
-              5
-            ]
-          },
-          _id: 0
+          _id: 1,
+          count: 1,
+          name: "$food.name",
+          category: "$food.category"
         }
       }
     ]);
 
-    // 🔑 always ensure 5 items
-    for (let i = 0; i < bestSellers.length; i++) {
-      const sellers = bestSellers[i].bestSellers;
+    // Step 3: organize per category
+    const sellersByCategory = {};
+    for (const cat of categories) {
+      sellersByCategory[cat] = [];
+    }
+    for (const item of bestSellers) {
+      sellersByCategory[item.category].push(item);
+    }
+    // Step 4: for each category, pad to 5 items
+    const results = [];
+    for (const cat of categories) {
+      let sellers = sellersByCategory[cat] || [];
+      // sort by count desc
+      sellers.sort((a, b) => b.count - a.count);
       const missing = 5 - sellers.length;
-
       if (missing > 0) {
+        const excludeIds = sellers.map(s => s._id);
         const extraFoods = await Food.find({
-          category: bestSellers[i].category,
-          _id: { $nin: sellers.map(f => f._id) }
+          category: cat,
+          _id: { $nin: excludeIds }
         })
           .limit(missing)
           .lean();
@@ -245,18 +244,25 @@ const handleGetBestSellers = async (req, res) => {
         for (const food of extraFoods) {
           sellers.push({
             _id: food._id,
-            count: 0 // never ordered
+            name: food.name,
+            category: cat,
+            count: 0
           });
         }
       }
+      results.push({
+        category: cat,
+        bestSellers: sellers
+      });
     }
 
-    res.json(bestSellers);
+    res.json(results);
   } catch (err) {
-    console.error("Error fetching best sellers:", err);
-    res.status(500).json({ error: "Server error" });
+    console.error(err);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 
 module.exports = {
