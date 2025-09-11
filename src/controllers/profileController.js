@@ -36,10 +36,9 @@ const handleGetProfile = async (req, res) => {
     }
     // get user email from User model
     const user = await User.findById(userId);
-    if (user) {
-      profile.email = user.email; // Add email to profile response
-    }
-    res.json(profile);
+    // add email to response but not to profile
+    const profileWithEmail = { ...profile.toObject(), email: user.email };
+    res.json(profileWithEmail);
     console.log(`Profile for user ${userId} fetched successfully`);
   } catch (err) {
     res.status(500).json({ error: 'Server error' });
