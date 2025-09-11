@@ -1,4 +1,5 @@
 const Profile = require('../models/Profile');
+const User = require('../models/User');
 
 const handleCreateProfile = async (req, res) => {
   const userId = req.user._id; // Get userId from authenticated request
@@ -32,6 +33,11 @@ const handleGetProfile = async (req, res) => {
     const profile = await Profile.findOne({ userId });
     if (!profile) {
       return res.status(404).json({ error: 'Profile not found' });
+    }
+    // get user email from User model
+    const user = await User.findById(userId);
+    if (user) {
+      profile.email = user.email; // Add email to profile response
     }
     res.json(profile);
     console.log(`Profile for user ${userId} fetched successfully`);
