@@ -73,7 +73,19 @@ const handleGetReviewsByFoodId = async (req, res) => {
     }
 }
 
+const handleGetAllReviews = async (req, res) => {
+    try {
+        const reviews = await Review.find().sort({ createdAt: -1 });
+        res.json(reviews);
+        console.log('All reviews fetched successfully');
+    } catch (err) {
+        res.status(500).json({ error: 'Server error' });
+        console.error('Error fetching all reviews:', err);
+    }
+}
+
 module.exports = {
+    handleGetAllReviews,
     handleAddReview,
     handleGetReviewsByFoodId,
 };
