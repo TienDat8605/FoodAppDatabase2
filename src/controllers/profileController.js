@@ -90,12 +90,16 @@ const handleDeleteProfile = async (req, res) => {
 }
 
 const handleAddProfilePicture = async (req, res) => {
-  const userId = req.user.userId; // Get userId from authenticated request
+  const userId = req.user.userId; // or req.user._id, depending on your auth middleware
 
   if (!userId || !req.file) {
     return res.status(400).json({ error: 'User ID and profile picture are required' });
   }
+
   try {
+    console.log("Updating profile picture for user:", userId);
+    console.log("Multer file info:", req.file);
+
     const profile = await Profile.findOneAndUpdate(
       { userId },
       {
@@ -103,22 +107,24 @@ const handleAddProfilePicture = async (req, res) => {
           profilePicture: {
             data: req.file.buffer,
             contentType: req.file.mimetype,
-          }
-        }
+          },
+        },
       },
-      { new: true }
+      { new: true } // return the updated doc
     );
 
     if (!profile) {
       return res.status(404).json({ error: 'Profile not found' });
     }
+
     res.json({ message: 'Profile picture updated', profile });
     console.log(`Profile picture for user ${userId} updated successfully`);
   } catch (err) {
-    res.status(500).json({ error: 'Server error' });
     console.error('Error updating profile picture:', err);
+    res.status(500).json({ error: 'Server error' });
   }
-}
+};
+
 
 module.exports = { handleCreateProfile, handleGetProfile, handleUpdateProfile, handleDeleteProfile, 
   handleAddProfilePicture };
