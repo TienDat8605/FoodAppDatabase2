@@ -31,7 +31,7 @@ app.use(hpp()); // Prevent HTTP Parameter Pollution
 app.use(morgan('dev')); // Request logging (for debugging & monitoring)
 
 // Middleware to handle multipart/form-data (for file uploads)
-app.use(upload.any()); // Accepts all files
+// app.use(upload.any()); // Accepts all files
 
 // Define routes
 app.use('/api/auth/register', require('./routes/api/auth/register'));
