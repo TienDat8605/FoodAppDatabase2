@@ -6,7 +6,7 @@ const upload = require('../../middlewares/multerMiddleware'); // Import multer m
 router.route('/')
   .get(authMiddleware, profileController.handleGetProfile) // GET profile by userId
   .put(authMiddleware ,profileController.handleUpdateProfile); // Update profile by userId
-router.post(
+router.put(
   "/picture",
   authMiddleware,
   (req, res, next) => {
