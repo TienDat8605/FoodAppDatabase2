@@ -22,7 +22,6 @@ router.put(
   upload.single("profilePicture"),
   (req, res, next) => {
     console.log("Multer parsed file:", req.file);
-    res.json({ ok: true });
     next();
   },
   profileController.handleAddProfilePicture
