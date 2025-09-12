@@ -7,19 +7,24 @@ router.route('/')
   .get(authMiddleware, profileController.handleGetProfile) // GET profile by userId
   .put(authMiddleware ,profileController.handleUpdateProfile); // Update profile by userId
 router.post(
-  '/picture',
+  "/picture",
   authMiddleware,
   (req, res, next) => {
-    console.log("Headers:", req.headers["content-type"]);
+    console.log("Raw headers:", req.headers["content-type"]);
+    req.on("data", chunk => {
+      console.log("Received chunk size:", chunk.length);
+    });
+    req.on("end", () => {
+      console.log("Request stream ended.");
+    });
     next();
   },
   upload.single("profilePicture"),
   (req, res) => {
-    console.log("File parsed by Multer:", req.file);
-    console.log("Body fields:", req.body);
-    if (!req.file) return res.status(400).json({ error: "No file uploaded" });
-    res.json({ success: true });
+    console.log("Multer parsed file:", req.file);
+    res.json({ ok: true });
   }
 );
+
 
 module.exports = router;
