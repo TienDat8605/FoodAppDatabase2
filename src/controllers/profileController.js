@@ -38,6 +38,9 @@ const handleGetProfile = async (req, res) => {
     const user = await User.findById(userId);
     // add email to response but not to profile
     const profileWithEmail = { ...profile.toObject(), email: user.email };
+    if (profileWithEmail.profilePicture?.data) {
+      profileWithEmail.profilePicture.data = profileWithEmail.profilePicture.data.toString('base64');
+    }
     res.json(profileWithEmail);
     console.log(`Profile for user ${userId} fetched successfully`);
   } catch (err) {
