@@ -98,14 +98,17 @@ const handleAddProfilePicture = async (req, res) => {
   try {
     const profile = await Profile.findOneAndUpdate(
       { userId },
-    {
-        profilePicture: {
-          data: req.file.buffer,
-          contentType: req.file.mimetype,
-        } 
+      {
+        $set: {
+          profilePicture: {
+            data: req.file.buffer,
+            contentType: req.file.mimetype,
+          }
+        }
       },
-      { new: true } // Return the updated profile
+      { new: true }
     );
+
     if (!profile) {
       return res.status(404).json({ error: 'Profile not found' });
     }
